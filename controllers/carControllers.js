@@ -121,7 +121,20 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
       insurance_type: insurance_type.toLowerCase(),
       brand_name: brand_name.toLowerCase(),
       model: model.toLowerCase(),
-      sub_model: sub_model.toLowerCase(),
+      $and: [
+        {
+          sub_model: sub_model.toLowerCase(),
+          sub_model: "all",
+        },
+        {
+          sum_insured_min: { $lte: amount },
+          sum_insured_max: { $gte: amount },
+        },
+        {
+          car_age_min: { $lte: year },
+          car_age_max: { $gte: year },
+        },
+      ],
     })
       .select("-_id -createdAt -updatedAt -__v")
       .lean();

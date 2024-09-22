@@ -16,6 +16,7 @@ exports.addPremiums = async (req, res, next) => {
       model,
       sub_model,
       company_name,
+      premium_name,
       insurance_type,
       responsibility_body_min,
       responsibility_body_max,
@@ -30,6 +31,10 @@ exports.addPremiums = async (req, res, next) => {
       criminal_driver,
       insurance_premium_type,
       insurance_premium_condition,
+      sum_insured_min,
+      sum_insured_max,
+      car_age_min,
+      car_age_max,
     } = req.body;
 
     const existBrand = await Brands.findOne({
@@ -60,6 +65,7 @@ exports.addPremiums = async (req, res, next) => {
       model: model.toLowerCase(),
       sub_model: sub_model.toLowerCase(),
       company_name: company_name,
+      premium_name: premium_name,
       insurance_type: insurance_type,
       responsibility_body_min: responsibility_body_min,
       responsibility_body_max: responsibility_body_max,
@@ -74,6 +80,10 @@ exports.addPremiums = async (req, res, next) => {
       criminal_driver: criminal_driver,
       insurance_premium_type: insurance_premium_type,
       insurance_premium_condition: insurance_premium_condition,
+      sum_insured_min: sum_insured_min,
+      sum_insured_max: sum_insured_max,
+      car_age_min: car_age_min,
+      car_age_max: car_age_max,
     });
 
     await newPremium.save();
@@ -89,6 +99,21 @@ exports.addPremiums = async (req, res, next) => {
   } catch (error) {
     //Example for log error data
     // logger.error(error.message);
+    next(error);
+  }
+};
+
+exports.listPremium = async (req, res, next) => {
+  try {
+    const premiumList = await CarPremiums.find()
+      .select("-_id -createdAt -updatedAt -__v")
+      .lean();
+
+    return res.status(200).json({
+      ...responseMessage.success,
+      data: premiumList,
+    });
+  } catch (error) {
     next(error);
   }
 };

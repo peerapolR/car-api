@@ -24,6 +24,11 @@ const schema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    premium_name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     insurance_type: {
       type: String,
       required: true,
@@ -67,6 +72,18 @@ const schema = new mongoose.Schema(
     },
     insurance_premium_condition: {
       type: String,
+    },
+    sum_insured_min: {
+      type: Number,
+    },
+    sum_insured_max: {
+      type: Number,
+    },
+    car_age_min: {
+      type: Number,
+    },
+    car_age_max: {
+      type: Number,
     },
     isActive: {
       type: Boolean,
