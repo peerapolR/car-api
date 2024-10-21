@@ -34,24 +34,24 @@ const schema = new mongoose.Schema(
       required: true,
       enum: ["1", "2", "3", "2+", "3+"],
     },
-    responsibility_body_min: {
+    responsibility_body_person: {
       type: Number,
     },
-    responsibility_body_max: {
+    responsibility_body_times: {
       type: Number,
     },
     responsibility_asset: {
       type: Number,
     },
-    car_damage: {
-      type: Number,
-    },
+    // car_damage: {
+    //   type: Number,
+    // },
     first_damage: {
       type: Number,
     },
-    car_lost_fire: {
-      type: Number,
-    },
+    // car_lost_fire: {
+    //   type: Number,
+    // },
     personal_accident: {
       type: Number,
     },
@@ -83,6 +83,12 @@ const schema = new mongoose.Schema(
       type: Number,
     },
     car_age_max: {
+      type: Number,
+    },
+    fund_regis_bkk: {
+      type: Number,
+    },
+    fund_regis_up_country: {
       type: Number,
     },
     isActive: {

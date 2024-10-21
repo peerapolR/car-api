@@ -18,12 +18,12 @@ exports.addPremiums = async (req, res, next) => {
       company_name,
       premium_name,
       insurance_type,
-      responsibility_body_min,
-      responsibility_body_max,
+      responsibility_body_person,
+      responsibility_body_times,
       responsibility_asset,
-      car_damage,
+      // car_damage,
       first_damage,
-      car_lost_fire,
+      // car_lost_fire,
       personal_accident,
       personal_accident_number,
       medical,
@@ -35,6 +35,8 @@ exports.addPremiums = async (req, res, next) => {
       sum_insured_max,
       car_age_min,
       car_age_max,
+      fund_regis_bkk,
+      fund_regis_up_country,
     } = req.body;
 
     const existBrand = await Brands.findOne({
@@ -67,12 +69,12 @@ exports.addPremiums = async (req, res, next) => {
       company_name: company_name,
       premium_name: premium_name,
       insurance_type: insurance_type,
-      responsibility_body_min: responsibility_body_min,
-      responsibility_body_max: responsibility_body_max,
+      responsibility_body_person: responsibility_body_person,
+      responsibility_body_times: responsibility_body_times,
       responsibility_asset: responsibility_asset,
-      car_damage: car_damage,
+      // car_damage: car_damage,
       first_damage: first_damage,
-      car_lost_fire: car_lost_fire,
+      // car_lost_fire: car_lost_fire,
       personal_accident: personal_accident,
       personal_accident_number: personal_accident_number,
       medical: medical,
@@ -84,6 +86,8 @@ exports.addPremiums = async (req, res, next) => {
       sum_insured_max: sum_insured_max,
       car_age_min: car_age_min,
       car_age_max: car_age_max,
+      fund_regis_bkk: fund_regis_bkk,
+      fund_regis_up_country: fund_regis_up_country,
     });
 
     await newPremium.save();

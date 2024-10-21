@@ -107,7 +107,10 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
       sub_model,
       year,
       amount,
+      first_damage,
+      insurance_premium_type,
     } = req.body;
+
     const existBrand = await Brands.find({
       brand_name: brand_name.toLowerCase(),
     });
@@ -116,33 +119,132 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    const quoList = await CarPremiums.find({
-      car_type: car_type,
-      insurance_type: insurance_type.toLowerCase(),
-      brand_name: brand_name.toLowerCase(),
-      model: model.toLowerCase(),
-      $and: [
-        {
-          sub_model: sub_model.toLowerCase(),
-          sub_model: "all",
-        },
-        {
-          sum_insured_min: { $lte: amount },
-          sum_insured_max: { $gte: amount },
-        },
-        {
-          car_age_min: { $lte: year },
-          car_age_max: { $gte: year },
-        },
-      ],
-    })
-      .select("-_id -createdAt -updatedAt -__v")
-      .lean();
 
-    return res.status(200).json({
-      ...responseMessage.success,
-      data: quoList,
-    });
+    if (first_damage && !insurance_premium_type) {
+      const quoList = await CarPremiums.find({
+        car_type: car_type,
+        insurance_type: insurance_type.toLowerCase(),
+        brand_name: brand_name.toLowerCase(),
+        model: model.toLowerCase(),
+        $and: [
+          {
+            sub_model: sub_model.toLowerCase(),
+            sub_model: "all",
+          },
+          {
+            sum_insured_min: { $lte: amount },
+            sum_insured_max: { $gte: amount },
+          },
+          {
+            car_age_min: { $lte: year },
+            car_age_max: { $gte: year },
+          },
+          {
+            first_damage: first_damage,
+          },
+        ],
+      })
+        .select("-_id -createdAt -updatedAt -__v")
+        .lean();
+
+      return res.status(200).json({
+        ...responseMessage.success,
+        data: quoList,
+      });
+    } else if (insurance_premium_type && !first_damage) {
+      const quoList = await CarPremiums.find({
+        car_type: car_type,
+        insurance_type: insurance_type.toLowerCase(),
+        brand_name: brand_name.toLowerCase(),
+        model: model.toLowerCase(),
+        $and: [
+          {
+            sub_model: sub_model.toLowerCase(),
+            sub_model: "all",
+          },
+          {
+            sum_insured_min: { $lte: amount },
+            sum_insured_max: { $gte: amount },
+          },
+          {
+            car_age_min: { $lte: year },
+            car_age_max: { $gte: year },
+          },
+          {
+            insurance_premium_type: insurance_premium_type,
+          },
+        ],
+      })
+        .select("-_id -createdAt -updatedAt -__v")
+        .lean();
+
+      return res.status(200).json({
+        ...responseMessage.success,
+        data: quoList,
+      });
+    } else if (first_damage && insurance_premium_type) {
+      const quoList = await CarPremiums.find({
+        car_type: car_type,
+        insurance_type: insurance_type.toLowerCase(),
+        brand_name: brand_name.toLowerCase(),
+        model: model.toLowerCase(),
+        $and: [
+          {
+            sub_model: sub_model.toLowerCase(),
+            sub_model: "all",
+          },
+          {
+            sum_insured_min: { $lte: amount },
+            sum_insured_max: { $gte: amount },
+          },
+          {
+            car_age_min: { $lte: year },
+            car_age_max: { $gte: year },
+          },
+          {
+            insurance_premium_type: insurance_premium_type,
+          },
+          {
+            first_damage: first_damage,
+          },
+        ],
+      })
+        .select("-_id -createdAt -updatedAt -__v")
+        .lean();
+
+      return res.status(200).json({
+        ...responseMessage.success,
+        data: quoList,
+      });
+    } else {
+      const quoList = await CarPremiums.find({
+        car_type: car_type,
+        insurance_type: insurance_type.toLowerCase(),
+        brand_name: brand_name.toLowerCase(),
+        model: model.toLowerCase(),
+        $and: [
+          {
+            sub_model: sub_model.toLowerCase(),
+            sub_model: "all",
+          },
+          {
+            sum_insured_min: { $lte: amount },
+            sum_insured_max: { $gte: amount },
+          },
+          {
+            car_age_min: { $lte: year },
+            car_age_max: { $gte: year },
+          },
+        ],
+      })
+        .select("-_id -createdAt -updatedAt -__v")
+        .lean();
+
+      return res.status(200).json({
+        ...responseMessage.success,
+        data: quoList,
+      });
+    }
   } catch (error) {
     next(error);
   }
