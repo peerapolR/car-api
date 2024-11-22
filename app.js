@@ -37,6 +37,7 @@ const usersRouter = require("./routes/users");
 const brandsRouter = require("./routes/brands");
 const carsRouter = require("./routes/cars");
 const premiumsRouter = require("./routes/premiums");
+const transactionsRouter = require("./routes/transactions");
 // const patientsRouter = require("./routes/patients");
 
 const errorHandler = require("./middlewares/errorHandler");
@@ -62,6 +63,7 @@ app.use("/users", usersRouter);
 app.use("/brands", brandsRouter);
 app.use("/cars", carsRouter);
 app.use("/premiums", premiumsRouter);
+app.use("/transactions", transactionsRouter);
 
 // app.use("/patients", [passportJWT.isLogin], patientsRouter);
 
