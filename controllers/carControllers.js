@@ -121,15 +121,14 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
     }
 
     if (first_damage && !insurance_premium_type) {
-      const quoList = await CarPremiums.find({
+      const quoCheck1 = await CarPremiums.find({
         car_type: car_type,
-        insurance_type: insurance_type.toLowerCase(),
+        insurance_type: parseInt(insurance_type),
         brand_name: brand_name.toLowerCase(),
         model: model.toLowerCase(),
         $and: [
           {
             sub_model: sub_model.toLowerCase(),
-            sub_model: "all",
           },
           {
             sum_insured_min: { $lte: amount },
@@ -147,20 +146,51 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
         .select("-_id -createdAt -updatedAt -__v")
         .lean();
 
-      return res.status(200).json({
-        ...responseMessage.success,
-        data: quoList,
-      });
+      if (quoCheck1.length === 0) {
+        const quoCheck2 = await CarPremiums.find({
+          car_type: car_type,
+          insurance_type: parseInt(insurance_type),
+          brand_name: brand_name.toLowerCase(),
+          model: model.toLowerCase(),
+          $and: [
+            {
+              sub_model: "all",
+            },
+            {
+              sum_insured_min: { $lte: amount },
+              sum_insured_max: { $gte: amount },
+            },
+            {
+              car_age_min: { $lte: year },
+              car_age_max: { $gte: year },
+            },
+            {
+              first_damage: first_damage,
+            },
+          ],
+        })
+          .select("-_id -createdAt -updatedAt -__v")
+          .lean();
+
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck2,
+        });
+      } else {
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck1,
+        });
+      }
     } else if (insurance_premium_type && !first_damage) {
-      const quoList = await CarPremiums.find({
+      const quoCheck1 = await CarPremiums.find({
         car_type: car_type,
-        insurance_type: insurance_type.toLowerCase(),
+        insurance_type: parseInt(insurance_type),
         brand_name: brand_name.toLowerCase(),
         model: model.toLowerCase(),
         $and: [
           {
             sub_model: sub_model.toLowerCase(),
-            sub_model: "all",
           },
           {
             sum_insured_min: { $lte: amount },
@@ -178,20 +208,51 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
         .select("-_id -createdAt -updatedAt -__v")
         .lean();
 
-      return res.status(200).json({
-        ...responseMessage.success,
-        data: quoList,
-      });
+      if (quoCheck1.length === 0) {
+        const quoCheck2 = await CarPremiums.find({
+          car_type: car_type,
+          insurance_type: parseInt(insurance_type),
+          brand_name: brand_name.toLowerCase(),
+          model: model.toLowerCase(),
+          $and: [
+            {
+              sub_model: "all",
+            },
+            {
+              sum_insured_min: { $lte: amount },
+              sum_insured_max: { $gte: amount },
+            },
+            {
+              car_age_min: { $lte: year },
+              car_age_max: { $gte: year },
+            },
+            {
+              insurance_premium_type: insurance_premium_type,
+            },
+          ],
+        })
+          .select("-_id -createdAt -updatedAt -__v")
+          .lean();
+
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck2,
+        });
+      } else {
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck1,
+        });
+      }
     } else if (first_damage && insurance_premium_type) {
-      const quoList = await CarPremiums.find({
+      const quoCheck1 = await CarPremiums.find({
         car_type: car_type,
-        insurance_type: insurance_type.toLowerCase(),
+        insurance_type: parseInt(insurance_type),
         brand_name: brand_name.toLowerCase(),
         model: model.toLowerCase(),
         $and: [
           {
             sub_model: sub_model.toLowerCase(),
-            sub_model: "all",
           },
           {
             sum_insured_min: { $lte: amount },
@@ -212,38 +273,107 @@ exports.getCarInsuranceQuotation = async (req, res, next) => {
         .select("-_id -createdAt -updatedAt -__v")
         .lean();
 
-      return res.status(200).json({
-        ...responseMessage.success,
-        data: quoList,
-      });
+      if (quoCheck1.length === 0) {
+        const quoCheck2 = await CarPremiums.find({
+          car_type: car_type,
+          insurance_type: parseInt(insurance_type),
+          brand_name: brand_name.toLowerCase(),
+          model: model.toLowerCase(),
+          $and: [
+            {
+              sub_model: "all",
+            },
+            {
+              sum_insured_min: { $lte: amount },
+              sum_insured_max: { $gte: amount },
+            },
+            {
+              car_age_min: { $lte: year },
+              car_age_max: { $gte: year },
+            },
+            {
+              insurance_premium_type: insurance_premium_type,
+            },
+            {
+              first_damage: first_damage,
+            },
+          ],
+        })
+          .select("-_id -createdAt -updatedAt -__v")
+          .lean();
+
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck2,
+        });
+      } else {
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck1,
+        });
+      }
     } else {
-      const quoList = await CarPremiums.find({
+      const result = await CarPremiums.find({
+        car_type: 110,
+        insurance_type: 1,
+        brand_name: "mercedes-benz",
+        model: "cla-class",
+        sub_model: "cla 200",
+        sum_insured_min: { $lte: 1100000 },
+        sum_insured_max: { $gte: 1100000 },
+        car_age_min: { $lte: 4 },
+        car_age_max: { $gte: 4 },
+      }).lean();
+      console.log(result);
+
+      const quoCheck1 = await CarPremiums.find({
         car_type: car_type,
-        insurance_type: insurance_type.toLowerCase(),
+        insurance_type: parseInt(insurance_type),
         brand_name: brand_name.toLowerCase(),
         model: model.toLowerCase(),
-        $and: [
-          {
-            sub_model: sub_model.toLowerCase(),
-            sub_model: "all",
-          },
-          {
-            sum_insured_min: { $lte: amount },
-            sum_insured_max: { $gte: amount },
-          },
-          {
-            car_age_min: { $lte: year },
-            car_age_max: { $gte: year },
-          },
-        ],
+        sub_model: sub_model.toLowerCase(),
+        sum_insured_min: { $lte: amount },
+        sum_insured_max: { $gte: amount },
+        car_age_min: { $lte: year },
+        car_age_max: { $gte: year },
       })
         .select("-_id -createdAt -updatedAt -__v")
         .lean();
 
-      return res.status(200).json({
-        ...responseMessage.success,
-        data: quoList,
-      });
+
+      if (quoCheck1.length === 0) {
+        const quoCheck2 = await CarPremiums.find({
+          car_type: car_type,
+          insurance_type: parseInt(insurance_type),
+          brand_name: brand_name.toLowerCase(),
+          model: model.toLowerCase(),
+          $and: [
+            {
+              sub_model: "all",
+            },
+            {
+              sum_insured_min: { $lte: amount },
+              sum_insured_max: { $gte: amount },
+            },
+            {
+              car_age_min: { $lte: year },
+              car_age_max: { $gte: year },
+            },
+          ],
+        })
+          .select("-_id -createdAt -updatedAt -__v")
+          .lean();
+
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck2,
+        });
+      } else {
+        return res.status(200).json({
+          ...responseMessage.success,
+          data: quoCheck1,
+        });
+      }
     }
   } catch (error) {
     next(error);
